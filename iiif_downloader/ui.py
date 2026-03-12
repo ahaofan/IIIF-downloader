@@ -65,22 +65,6 @@ class IIIFDownloaderUI:
         ttk.Button(button_frame, text="下载全部图片", command=self.download_all).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
         ttk.Button(button_frame, text="取消下载", command=self.cancel_download).pack(side=tk.RIGHT, padx=5)
         
-        # 图片地址显示区域
-        urls_frame = ttk.LabelFrame(main_frame, text="图片地址", padding="10")
-        urls_frame.pack(fill=tk.BOTH, expand=True, pady=5)
-        
-        # 创建文本框和滚动条
-        urls_inner_frame = ttk.Frame(urls_frame)
-        urls_inner_frame.pack(fill=tk.BOTH, expand=True)
-        
-        self.urls_text = tk.Text(urls_inner_frame, height=5, wrap=tk.WORD)
-        self.urls_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        
-        # 添加滚动条
-        urls_scrollbar = ttk.Scrollbar(urls_inner_frame, orient=tk.VERTICAL, command=self.urls_text.yview)
-        urls_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.urls_text.config(yscrollcommand=urls_scrollbar.set)
-        
         # 下载进度条
         progress_frame = ttk.LabelFrame(main_frame, text="下载进度", padding="10")
         progress_frame.pack(fill=tk.X, pady=5)
@@ -92,6 +76,22 @@ class IIIFDownloaderUI:
         # 下载速度和状态显示
         self.status_details_var = tk.StringVar(value="准备就绪")
         ttk.Label(progress_frame, textvariable=self.status_details_var).pack(anchor=tk.W)
+        
+        # 图片地址显示区域 - 放在进度条下面
+        urls_frame = ttk.LabelFrame(main_frame, text="图片地址", padding="10")
+        urls_frame.pack(fill=tk.BOTH, expand=True, pady=5)
+        
+        # 创建文本框和滚动条
+        urls_inner_frame = ttk.Frame(urls_frame)
+        urls_inner_frame.pack(fill=tk.BOTH, expand=True)
+        
+        self.urls_text = tk.Text(urls_inner_frame, height=5, wrap=tk.WORD, state=tk.DISABLED)
+        self.urls_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        
+        # 添加滚动条
+        urls_scrollbar = ttk.Scrollbar(urls_inner_frame, orient=tk.VERTICAL, command=self.urls_text.yview)
+        urls_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.urls_text.config(yscrollcommand=urls_scrollbar.set)
         
         # 状态区域
         self.status_var = tk.StringVar(value="就绪")
@@ -110,7 +110,9 @@ class IIIFDownloaderUI:
     def clear_input(self):
         """清空输入框"""
         self.input_text.delete(1.0, tk.END)
+        self.urls_text.config(state=tk.NORMAL)
         self.urls_text.delete(1.0, tk.END)
+        self.urls_text.config(state=tk.DISABLED)
         self.status_var.set("就绪")
         self.status_details_var.set("准备就绪")
     
@@ -218,9 +220,11 @@ class IIIFDownloaderUI:
                 
                 # 提取并显示所有图片地址
                 image_urls = self.parser.get_all_image_urls(info_json, "jpg")
+                self.root.after(0, lambda: self.urls_text.config(state=tk.NORMAL))
                 self.root.after(0, lambda: self.urls_text.delete(1.0, tk.END))
                 for url in image_urls:
                     self.root.after(0, lambda u=url: self.urls_text.insert(tk.END, u + "\n"))
+                self.root.after(0, lambda: self.urls_text.config(state=tk.DISABLED))
                 self.root.after(0, lambda: self.status_var.set(f"提取到 {len(image_urls)} 个图片地址，开始下载"))
                 
                 # 下载所有图片
