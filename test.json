@@ -1,0 +1,96 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "https://emuseum.nich.go.jp/iiifapi/100949001/manifest.json",
+  "@type": "sc:Manifest",
+  "metadata": [],
+  "thumbnail": {
+    "@id": "https://emuseum.nich.go.jp/img/content/100949001005/5/thumbnail.jpeg",
+    "@type": "dctypes:Image",
+    "height": 104,
+    "width": 200
+  },
+  "viewingHint": "individuals",
+  "viewingDirection": "",
+  "license": "https://emuseum.nich.go.jp/about",
+  "attribution": [
+    { "@value": "独立行政法人国立文化財機構", "@language": "ja" },
+    {
+      "@value": "National Institutes for Cultural Heritage",
+      "@language": "en"
+    },
+    { "@value": "国立文化财机构", "@language": "zh" },
+    { "@value": "국립문화재기구", "@language": "ko" }
+  ],
+  "logo": [{ "@id": "https://emuseum.nich.go.jp/assets/img/logo.png" }],
+  "rendering": {
+    "@id": "https://emuseum.nich.go.jp/detail?langId=ja&webView=&content_base_id=100949&content_part_id=1&content_pict_id=0",
+    "label": [],
+    "format": "text/html"
+  },
+  "within": {
+    "@id": "https://emuseum.nich.go.jp/iiifapi/100949000/collection.json",
+    "@type": "sc:Collection",
+    "label": [
+      { "@value": "山水屏風", "@language": "ja" },
+      {
+        "@value": "Landscape with Figures (Known as Senzui Byobu)",
+        "@language": "en"
+      },
+      { "@value": "山水屏风", "@language": "zh" },
+      { "@value": "산수 병풍(山水屏風)", "@language": "ko" }
+    ]
+  },
+  "sequences": [
+    {
+      "@type": "sc:Sequence",
+      "canvases": [
+        {
+          "@id": "https://emuseum.nich.go.jp/iiif/?IIIF=/100949001005.tif/full/full/0/default.jpg",
+          "@type": "sc:Canvas",
+          "label": "1",
+          "height": 4754,
+          "width": 9155,
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "@context": "http://iiif.io/api/presentation/2/context.json",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://emuseum.nich.go.jp/iiif/?IIIF=/100949001005.tif/full/full/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://emuseum.nich.go.jp/iiif/?IIIF=/100949001005.tif",
+                  "profile": [
+                    "http://iiif.io/api/image/2/level1.json",
+                    {
+                      "formats": ["jpg"],
+                      "qualities": ["native", "color", "gray"],
+                      "supports": [
+                        "regionByPct",
+                        "sizeByForcedWh",
+                        "sizeByWh",
+                        "sizeAboveFull",
+                        "rotationBy90s",
+                        "mirroring",
+                        "gray"
+                      ]
+                    }
+                  ]
+                },
+                "height": 4754,
+                "width": 9155
+              },
+              "on": "https://emuseum.nich.go.jp/iiif/?IIIF=/100949001005.tif#xywh=0,0,9155,4754"
+            }
+          ],
+          "thumbnail": {
+            "@id": "https://emuseum.nich.go.jp/img/content/100949001005/5/thumbnail.jpeg",
+            "@type": "dctypes:Image"
+          }
+        }
+      ]
+    }
+  ]
+}
