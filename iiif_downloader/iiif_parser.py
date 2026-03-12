@@ -78,14 +78,17 @@ class IIIFParser:
                 for image in images:
                     # 获取resource
                     resource = image.get('resource', {})
-                    # 获取service
-                    service = resource.get('service', {})
-                    if service and '@id' in service:
-                        # 提取Image API基础URL
-                        base_url = service['@id']
-                        # 构建完整尺寸图片URL（高清图）
-                        full_image_url = f"{base_url}/full/max/0/default.{format}"
-                        image_urls.append(full_image_url)
+                    # 优先从service构建高清原图URL
+                    if 'service' in resource:
+                        service = resource['service']
+                        if '@id' in service:
+                            base_url = service['@id']
+                            # 构建高清原图URL，使用max尺寸
+                            full_image_url = f"{base_url}/full/max/0/default.{format}"
+                            image_urls.append(full_image_url)
+                    # 如果没有service，才使用resource['@id']
+                    elif '@id' in resource:
+                        image_urls.append(resource['@id'])
         
         return image_urls
     
@@ -96,28 +99,8 @@ class IIIFParser:
         # 基本图片URL
         base_url = info_json.get('@id')
         if base_url:
-            # 添加完整尺寸图片
+            # 只添加完整尺寸的高清图片
             full_image_url = f"{base_url}/full/max/0/default.{format}"
             image_urls.append(full_image_url)
-            
-            # 从tiles中提取图片URL
-            tiles = info_json.get('tiles', [])
-            for tile in tiles:
-                width = tile.get('width', 512)
-                height = tile.get('height', 512)
-                scale_factors = tile.get('scaleFactors', [1])
-                
-                for scale in scale_factors:
-                    tile_url = f"{base_url}/full/{width * scale},{height * scale}/0/default.{format}"
-                    image_urls.append(tile_url)
-            
-            # 从sizes中提取不同尺寸的图片
-            sizes = info_json.get('sizes', [])
-            for size in sizes:
-                width = size.get('width')
-                height = size.get('height')
-                if width and height:
-                    size_url = f"{base_url}/full/{width},{height}/0/default.{format}"
-                    image_urls.append(size_url)
         
         return image_urls

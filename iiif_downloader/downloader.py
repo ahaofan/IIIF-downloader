@@ -18,7 +18,15 @@ class IIIFDownloader:
         """下载单个图片"""
         try:
             import time
-            response = requests.get(url, stream=True, timeout=30)
+            # 添加浏览器头信息，伪装为浏览器
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            # 打印调试信息
+            print(f"开始下载: {url}")
+            print(f"保存路径: {save_path}")
+            
+            response = requests.get(url, stream=True, timeout=30, headers=headers)
             response.raise_for_status()
             
             # 确保目录存在
@@ -33,16 +41,8 @@ class IIIFDownloader:
             callback_interval = 100  # 每100个chunk回调一次
             chunk_count = 0
             
-            with open(save_path, 'wb') as f, tqdm(
-                desc=os.path.basename(save_path),
-                total=total_size,
-                unit='B',
-                unit_scale=True,
-                unit_divisor=1024,
-                ncols=80,  # 设置进度条宽度
-                leave=False,  # 下载完成后不保留进度条
-                dynamic_ncols=True  # 动态调整宽度
-            ) as bar:
+            # 移除tqdm，因为它在非控制台环境中可能有问题
+            with open(save_path, 'wb') as f:
                 for data in response.iter_content(chunk_size=1024):
                     # 检查是否取消下载
                     if self._cancel:
@@ -51,7 +51,6 @@ class IIIFDownloader:
                     
                     size = f.write(data)
                     downloaded_size += size
-                    bar.update(size)
                     chunk_count += 1
                     
                     # 计算下载速度并更新进度，控制回调频率
@@ -61,9 +60,17 @@ class IIIFDownloader:
                             speed = downloaded_size / elapsed_time / 1024  # KB/s
                             progress_callback(current, total, speed)
             
+            # 打印下载完成信息
+            print(f"下载完成: {url}")
+            print(f"文件大小: {os.path.getsize(save_path)} 字节")
+            
             return True
         except Exception as e:
-            print(f"下载失败: {e}")
+            print(f"下载失败: {str(e)}")
+            # 确保文件被删除，避免生成0字节文件
+            if os.path.exists(save_path):
+                os.remove(save_path)
+                print(f"已删除0字节文件: {save_path}")
             return False
     
     def download_images(self, urls, save_dir, filenames=None, progress_callback=None):

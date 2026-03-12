@@ -302,4 +302,12 @@ class IIIFDownloaderUI:
     
     def run(self):
         """运行UI"""
+        # 添加窗口关闭事件处理程序
+        def on_closing():
+            # 取消正在进行的下载
+            self.downloader.cancel_download()
+            # 销毁窗口
+            self.root.destroy()
+        
+        self.root.protocol("WM_DELETE_WINDOW", on_closing)
         self.root.mainloop()
