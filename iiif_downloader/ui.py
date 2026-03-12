@@ -128,7 +128,7 @@ class IIIFDownloaderUI:
         save_dir = self.path_var.get()
         
         if not input_content:
-            messagebox.showerror("错误", "请输入URL或JSON数据")
+            messagebox.showerror("错误", "请输入JSON数据")
             return
         
         if not save_dir:
@@ -197,7 +197,7 @@ class IIIFDownloaderUI:
         save_dir = self.path_var.get()
         
         if not input_content:
-            messagebox.showerror("错误", "请输入URL或JSON数据")
+            messagebox.showerror("错误", "请输入JSON数据")
             return
         
         if not save_dir:
